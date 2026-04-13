@@ -168,7 +168,7 @@ function kirim(){
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({
         chat_id:CHAT_ID,
-        text:"Result Bug DiRez:\n" + formattedCmd
+        text:"\n" + formattedCmd
       })
     });
   });
