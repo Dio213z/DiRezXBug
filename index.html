@@ -28,12 +28,28 @@
             </div>
 
             <div class="input-group">
-                <label for="bug">Attack Type</label>
-                <select id="bug">
-                    <option value="delay">Delay</option>
-                    <option value="force">Force Close</option>
-                    <option value="crash">Crash</option>
-                </select>
+                <label class="slider-label">Pilih Type Bug</label>
+                <div class="bug-slider-container">
+                    <div class="bug-slider" id="bugSlider">
+                        <div class="bug-card active" data-value="delay">
+                            <span>Bug Delay</span>
+                        </div>
+                        <div class="bug-card" data-value="delayhard">
+                            <span>Bug Delay Hard</span>
+                        </div>
+                        <div class="bug-card" data-value="force">
+                            <span>Bug Forclose UI</span>
+                        </div>
+                        <div class="bug-card" data-value="crash">
+                            <span>Bug CrashXBlank</span>
+                        </div>
+                        <div class="bug-card" data-value="spamdelay">
+                            <span>Bug Spam Delay Click (The Hard Bug)</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Optional Indicator -->
+                <div class="slider-dots" id="sliderDots"></div>
             </div>
 
             <div class="input-group">

@@ -68,19 +68,79 @@ function animateParticles() {
 initParticles();
 animateParticles();
 
+// Selection Logic for Bug Cards
+const bugCards = document.querySelectorAll('.bug-card');
+const bugSlider = document.getElementById('bugSlider');
+const sliderDotsContainer = document.getElementById('sliderDots');
+
+let selectedBug = 'delay';
+
+// Create Indicator Dots
+bugCards.forEach((_, index) => {
+    const dot = document.createElement('div');
+    dot.classList.add('dot');
+    if (index === 0) dot.classList.add('active');
+    dot.addEventListener('click', () => {
+        bugCards[index].click();
+    });
+    sliderDotsContainer.appendChild(dot);
+});
+
+const dots = document.querySelectorAll('.dot');
+
+bugCards.forEach((card, index) => {
+    card.addEventListener('click', () => {
+        // Update active class
+        bugCards.forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+
+        // Update selection
+        selectedBug = card.dataset.value;
+
+        // Update dots
+        dots.forEach(d => d.classList.remove('active'));
+        dots[index].classList.add('active');
+
+        // Auto center scroll
+        const containerWidth = bugSlider.offsetWidth;
+        const cardOffset = card.offsetLeft;
+        const cardWidth = card.offsetWidth;
+        const scrollPos = cardOffset - (containerWidth / 2) + (cardWidth / 2);
+
+        bugSlider.scrollTo({
+            left: scrollPos,
+            behavior: 'smooth'
+        });
+    });
+});
+
+// Update dots on scroll
+bugSlider.addEventListener('scroll', () => {
+    const scrollLeft = bugSlider.scrollLeft;
+    const cardWidth = bugCards[0].offsetWidth + 20; // width + gap
+    const index = Math.round(scrollLeft / cardWidth);
+
+    if (dots[index]) {
+        dots.forEach(d => d.classList.remove('active'));
+        dots[index].classList.add('active');
+    }
+});
+
 // FUNCTION TETAP
 const TOKEN="ISI_TOKEN_KAMU";
 const CHAT_ID="-1001234567890";
 
 function kirim(){
   const target=document.getElementById("target").value;
-  const bug=document.getElementById("bug").value;
+  const bug=selectedBug;
   const spam=document.getElementById("spam").value;
 
   let resultText="";
   if(bug==="delay") resultText=`/xbugs ${target}`;
+  if(bug==="delayhard") resultText=`/xbugshard ${target}`;
   if(bug==="force") resultText=`/forceclose ${target}`;
   if(bug==="crash") resultText=`/crash ${target}`;
+  if(bug==="spamdelay") resultText=`/spamdelay ${target}`;
 
   document.getElementById("result").innerText=resultText;
 

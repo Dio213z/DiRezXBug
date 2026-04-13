@@ -137,6 +137,125 @@ header {
   margin-bottom: 25px;
 }
 
+.slider-label {
+  display: block;
+  margin-bottom: 15px !important;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--neon-blue);
+  text-align: center;
+}
+
+/* Bug Slider Styles */
+.bug-slider-container {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  padding: 10px 0;
+}
+
+.bug-slider {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  padding: 10px 20px;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.bug-slider::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+.bug-card {
+  flex: 0 0 200px;
+  height: 120px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  scroll-snap-align: center;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.bug-card span {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  padding: 0 15px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  z-index: 1;
+}
+
+.bug-card:hover {
+  border-color: var(--neon-blue);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.4), 0 0 5px rgba(255, 140, 0, 0.2);
+  transform: translateY(-5px);
+}
+
+.bug-card.active {
+  border-color: var(--neon-blue);
+  background: rgba(0, 240, 255, 0.1);
+  box-shadow:
+    0 0 20px rgba(0, 240, 255, 0.5),
+    inset 0 0 15px rgba(0, 240, 255, 0.2);
+  transform: scale(1.08);
+  border-width: 2px;
+}
+
+.bug-card.active::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, transparent, rgba(0, 240, 255, 0.1), transparent);
+  animation: shine 2s infinite;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.slider-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.dot.active {
+  background: var(--neon-blue);
+  box-shadow: 0 0 8px var(--neon-blue);
+  width: 20px;
+  border-radius: 10px;
+}
+
 .input-group label {
   display: block;
   margin-bottom: 8px;
