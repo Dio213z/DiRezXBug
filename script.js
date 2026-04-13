@@ -150,12 +150,16 @@ bugCommands.spamdelay = bugCommands.force;
 
 // FUNCTION TETAP
 function kirim(){
+  console.log("EXECUTE CLICKED");
   const target = document.getElementById("target").value;
+  if (!target) return;
+
   const bug = selectedBug;
   const commands = bugCommands[bug] || [];
 
-  let fullResult = "";
+  console.log(target, commands);
 
+  let fullResult = "";
   commands.forEach(cmd => {
     fullResult += `${cmd} ${target}\n`;
   });
@@ -165,15 +169,15 @@ function kirim(){
     headers:{"Content-Type":"application/json"},
     body: JSON.stringify({
       target: target,
-      commands: bugCommands
+      commands: commands
     })
   })
   .then(res => res.json())
   .then(() => {
-    document.getElementById("result").innerText = fullResult || "Berhasil dikirim";
+    document.getElementById("result").innerText = "Berhasil dikirim ke userbot";
   })
   .catch(err => {
-    document.getElementById("result").innerText = "Error: " + err;
+    document.getElementById("result").innerText = "Koneksi ke userbot gagal";
   });
 
   let wa = document.getElementById("waLink");
