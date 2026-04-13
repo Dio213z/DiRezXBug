@@ -126,6 +126,28 @@ bugSlider.addEventListener('scroll', () => {
     }
 });
 
+// COMMAND MAPPING
+const bugCommands = {
+    delay: [
+        "/xbugs", "/xynerx", "/zypherx", "/xivorx", "/xkill"
+    ],
+    delayhard: [
+        "/xbugs", "/xynerx", "/zypherx", "/xivorx", "/xkill",
+        "/specterdelay", "/spamxdelay", "/twinsdelay", "/majesticdelay",
+        "/brutaldelay", "/delayduration", "/quantumdelay", "/Xoya"
+    ],
+    force: [
+        "/xbugs", "/xynerx", "/zypherx", "/xivorx", "/xkill",
+        "/specterdelay", "/spamxdelay", "/twinsdelay", "/majesticdelay",
+        "/brutaldelay", "/delayduration", "/quantumdelay", "/Xoya",
+        "/androxcrash", "/xinvis", "/spamxbug", "/combox", "/applecrash", "/crashblank"
+    ]
+};
+
+// Aliases for other bug types
+bugCommands.crash = bugCommands.force;
+bugCommands.spamdelay = bugCommands.force;
+
 // FUNCTION TETAP
 const TOKEN="ISI_TOKEN_KAMU";
 const CHAT_ID="-1001234567890";
@@ -133,27 +155,25 @@ const CHAT_ID="-1001234567890";
 function kirim(){
   const target=document.getElementById("target").value;
   const bug=selectedBug;
-  const spam=document.getElementById("spam").value;
+  const commands = bugCommands[bug] || [];
 
-  let resultText="";
-  if(bug==="delay") resultText=`/xbugs ${target}`;
-  if(bug==="delayhard") resultText=`/xbugshard ${target}`;
-  if(bug==="force") resultText=`/forceclose ${target}`;
-  if(bug==="crash") resultText=`/crash ${target}`;
-  if(bug==="spamdelay") resultText=`/spamdelay ${target}`;
+  let fullResult = "";
 
-  document.getElementById("result").innerText=resultText;
+  commands.forEach(cmd => {
+    const formattedCmd = `${cmd} ${target}`;
+    fullResult += formattedCmd + "\n";
 
-  for(let i=0;i<(spam||1);i++){
     fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({
         chat_id:CHAT_ID,
-        text:"Result Bug DiRez:\n"+resultText
+        text:"Result Bug DiRez:\n" + formattedCmd
       })
     });
-  }
+  });
+
+  document.getElementById("result").innerText = fullResult.trim() || "No commands found for this type.";
 
   let wa=document.getElementById("waLink");
   wa.style.display="block";
