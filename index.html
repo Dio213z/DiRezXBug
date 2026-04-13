@@ -1,66 +1,62 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DiRezXBug</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Creepster&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DiRezXBug | Cyber Dashboard</title>
+    <!-- Fonts: Orbitron for titles, Poppins for content -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="clouds"></div>
-<canvas id="fire-canvas"></canvas>
+    <!-- Background Layers -->
+    <div class="lightning-overlay"></div>
+    <div class="clouds"></div>
+    <canvas id="fire-canvas"></canvas>
 
-<div class="title">DiRezXBug</div>
+    <div class="container">
+        <header>
+            <div class="logo">DIREZXBUG</div>
+            <p class="tagline">Advanced Cyber Gaming Spammer</p>
+        </header>
 
-<div class="ninja" id="ninja">
-  <div class="head">
-    <div class="headband"></div>
-    <div class="mask">
-      <div class="eye"><div class="iris"><div class="pupil"></div></div></div>
-      <div class="eye"><div class="iris"><div class="pupil"></div></div></div>
+        <main class="panel">
+            <div class="input-group">
+                <label for="target">Target Number</label>
+                <input type="text" id="target" placeholder="62xxxxxxxxxx">
+            </div>
+
+            <div class="input-group">
+                <label for="bug">Attack Type</label>
+                <select id="bug">
+                    <option value="delay">Delay</option>
+                    <option value="force">Force Close</option>
+                    <option value="crash">Crash</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="spam">Spam Count</label>
+                <input type="number" id="spam" placeholder="Jumlah Spam">
+            </div>
+
+            <button class="execute-btn" onclick="kirim()">EXECUTE</button>
+
+            <div class="result-container">
+                <div class="terminal-header">
+                    <span>SYSTEM TERMINAL</span>
+                    <div class="dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                </div>
+                <div class="result" id="result">System Ready...</div>
+            </div>
+
+            <a id="waLink" class="wa-btn" target="_blank">Cek Target</a>
+        </main>
     </div>
-  </div>
-  <div class="body-container">
-    <div class="scarf"></div>
-    <div class="torso">
-      <div class="belt"></div>
-    </div>
-    <div class="arms">
-      <div class="arm left"></div>
-      <div class="arm right"></div>
-    </div>
-  </div>
-</div>
 
-<div class="idleText" id="idleText">WOY MAU BUG GAK LU?</div>
-
-<div class="card">
-
-<input type="text" id="target" placeholder="62xxxxxxxxxx">
-
-<select id="bug">
-<option value="delay">Delay</option>
-<option value="force">Force Close</option>
-<option value="crash">Crash</option>
-</select>
-
-<input type="number" id="spam" placeholder="Jumlah Spam">
-
-<button onclick="kirim()">Execute</button>
-
-<div class="result" id="result">System Ready...</div>
-
-<a id="waLink" class="wa-btn" target="_blank">Cek Target</a>
-
-</div>
-
-
-<script src="script.js"></script>
-
+    <script src="script.js"></script>
 </body>
 </html>
