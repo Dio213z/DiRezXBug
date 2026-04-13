@@ -180,16 +180,6 @@ function kirim(){
   wa.style.display = "block";
   wa.href = "https://wa.me/" + target;
 }
-      })
-    });
-  });
-
-  document.getElementById("result").innerText = fullResult.trim() || "No commands found for this type.";
-
-  let wa=document.getElementById("waLink");
-  wa.style.display="block";
-  wa.href="https://wa.me/"+target;
-}
 
 // Hadith Random Feature
 const hadithList = [
