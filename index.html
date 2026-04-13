@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DiRezXBug</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Creepster&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+<style>
+body{
+  background:black;
+  color:white;
+  font-family:'Share Tech Mono',monospace;
+}
+
+/* TITLE */
+.title{
+  text-align:center;
+  font-family:'Creepster';
+  font-size:45px;
+  color:#ff1a1a;
+}
+
+/* NINJA */
+.ninja{
+  width:200px;
+  margin:30px auto;
+  transition:0.5s;
+}
+
+.ninja.idle{
+  transform:scale(1.2);
+}
+
+/* HEAD */
+.head{
+  width:200px;
+  height:120px;
+  background:#111;
+  border-radius:100px 100px 60px 60px;
+  position:relative;
+}
+
+/* MASK */
+.mask{
+  position:absolute;
+  top:35px;
+  left:20px;
+  width:160px;
+  height:45px;
+  background:black;
+  border-radius:25px;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+}
+
+/* EYE */
+.eye{
+  width:60px;
+  height:30px;
+  background:#222;
+  border-radius:30px/15px;
+  overflow:hidden;
+  position:relative;
+  transition:0.3s;
+}
+
+.eye.sharp{
+  height:8px;
+}
+
+/* IRIS */
+.iris{
+  width:25px;
+  height:25px;
+  background:red;
+  border-radius:50%;
+  position:absolute;
+  top:2px;
+  left:15px;
+}
+
+.pupil{
+  width:10px;
+  height:10px;
+  background:black;
+  border-radius:50%;
+  position:absolute;
+  top:7px;
+  left:7px;
+}
+
+/* TEXT IDLE */
+.idleText{
+  text-align:center;
+  font-family:'Creepster';
+  font-size:30px;
+  color:red;
+  margin-top:10px;
+  opacity:0;
+  transition:0.3s;
+}
+
+.idleText.show{
+  opacity:1;
+}
+
+/* CARD */
+.card{
+  max-width:700px;
+  margin:auto;
+  padding:20px;
+  border-radius:15px;
+  background:rgba(0,0,0,.8);
+  border:1px solid red;
+}
+
+input,select{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border-radius:10px;
+  border:1px solid red;
+  background:black;
+  color:white;
+}
+
+button{
+  width:100%;
+  margin-top:15px;
+  padding:12px;
+  border:none;
+  background:red;
+  color:white;
+  cursor:pointer;
+}
+
+.result{
+  margin-top:15px;
+  background:black;
+  padding:12px;
+  color:#00ffcc;
+}
+
+.wa-btn{
+  display:none;
+  margin-top:10px;
+  padding:10px;
+  background:#25D366;
+  text-align:center;
+  border-radius:10px;
+  color:white;
+  text-decoration:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="title">DiRezXBug</div>
+
+<div class="ninja" id="ninja">
+  <div class="head">
+    <div class="mask">
+      <div class="eye"><div class="iris"><div class="pupil"></div></div></div>
+      <div class="eye"><div class="iris"><div class="pupil"></div></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="idleText" id="idleText">WOY MAU BUG GAK LU?</div>
+
+<div class="card">
+
+<input type="text" id="target" placeholder="62xxxxxxxxxx">
+
+<select id="bug">
+<option value="delay">Delay</option>
+<option value="force">Force Close</option>
+<option value="crash">Crash</option>
+</select>
+
+<input type="number" id="spam" placeholder="Jumlah Spam">
+
+<button onclick="kirim()">Execute</button>
+
+<div class="result" id="result">System Ready...</div>
+
+<a id="waLink" class="wa-btn" target="_blank">Cek Target</a>
+
+</div>
+
+<script>
+// FUNCTION TETAP
+const TOKEN="ISI_TOKEN_KAMU";
+const CHAT_ID="-1001234567890";
+
+function kirim(){
+  const target=document.getElementById("target").value;
+  const bug=document.getElementById("bug").value;
+  const spam=document.getElementById("spam").value;
+
+  let resultText="";
+  if(bug==="delay") resultText=`/xbugs ${target}`;
+  if(bug==="force") resultText=`/forceclose ${target}`;
+  if(bug==="crash") resultText=`/crash ${target}`;
+
+  document.getElementById("result").innerText=resultText;
+
+  for(let i=0;i<(spam||1);i++){
+    fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        chat_id:CHAT_ID,
+        text:"Result Bug DiRez:\n"+resultText
+      })
+    });
+  }
+
+  let wa=document.getElementById("waLink");
+  wa.style.display="block";
+  wa.href="https://wa.me/"+target;
+}
+
+// FOLLOW
+let mouseX=0, mouseY=0;
+let lastMove=Date.now();
+
+document.addEventListener("mousemove",(e)=>{
+  mouseX=e.clientX;
+  mouseY=e.clientY;
+  lastMove=Date.now();
+});
+
+function animateEyes(){
+  document.querySelectorAll(".iris").forEach(iris=>{
+    const rect=iris.parentElement.getBoundingClientRect();
+    const x=rect.left+rect.width/2;
+    const y=rect.top+rect.height/2;
+
+    const dx=(mouseX-x)/20;
+    const dy=(mouseY-y)/20;
+
+    iris.style.transform=`translate(${dx}px,${dy}px)`;
+  });
+
+  requestAnimationFrame(animateEyes);
+}
+animateEyes();
+
+// IDLE DETECT
+setInterval(()=>{
+  if(Date.now()-lastMove > 2000){
+    document.getElementById("ninja").classList.add("idle");
+    document.getElementById("idleText").classList.add("show");
+
+    document.querySelectorAll(".eye").forEach(e=>e.classList.add("sharp"));
+  }else{
+    document.getElementById("ninja").classList.remove("idle");
+    document.getElementById("idleText").classList.remove("show");
+
+    document.querySelectorAll(".eye").forEach(e=>e.classList.remove("sharp"));
+  }
+},500);
+</script>
+
+</body>
+</html>
