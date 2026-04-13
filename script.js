@@ -99,3 +99,73 @@ function kirim(){
   wa.style.display="block";
   wa.href="https://wa.me/"+target;
 }
+
+// Hadith Random Feature
+const hadithList = [
+  {
+    arab: "إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ",
+    indo: "Sesungguhnya amal itu tergantung niatnya"
+  },
+  {
+    arab: "مَنْ لاَ يَرْحَمْ لاَ يُرْحَمْ",
+    indo: "Barangsiapa tidak menyayangi, tidak akan disayangi"
+  },
+  {
+    arab: "الدِّينُ النَّصِيحَةُ",
+    indo: "Agama adalah nasihat"
+  },
+  {
+    arab: "الْمُسْلِمُ مَنْ سَلِمَ النَّاسُ مِنْ لِسَانِهِ وَيَدِهِ",
+    indo: "Muslim adalah yang orang lain selamat dari lisan dan tangannya"
+  },
+  {
+    arab: "لاَ يُؤْمِنُ أَحَدُكُمْ حَتَّى يُحِبَّ لأَخِيهِ مَا يُحِبُّ لِنَفْسِهِ",
+    indo: "Tidak sempurna iman seseorang hingga ia mencintai saudaranya seperti dirinya sendiri"
+  },
+  {
+    arab: "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ",
+    indo: "Sebaik-baik kalian adalah yang mempelajari Al-Qur'an dan mengajarkannya"
+  },
+  {
+    arab: "كَلِمَتَانِ خَفِيفَتَانِ عَلَى اللِّسَانِ ثَقِيلَتَانِ فِي الْمِيزَانِ حَبِيبَتَانِ إِلَى الرَّحْمَنِ سُبْحَانَ اللَّهِ وَبِحَمْدِهِ سُبْحَانَ اللَّهِ الْعَظِيمِ",
+    indo: "Dua kalimat yang ringan di lisan, berat di timbangan, dan dicintai Ar-Rahman: Subhanallahi wa bihamdihi, Subhanallahil 'Adzim"
+  },
+  {
+    arab: "اتَّقِ اللَّهَ حَيْثُمَا كُنْتَ",
+    indo: "Bertakwalah kepada Allah di mana pun kamu berada"
+  }
+];
+
+function typeWriter(text, elementId, speed = 50) {
+  let i = 0;
+  const element = document.getElementById(elementId);
+  element.innerHTML = "";
+  function type() {
+    if (i < text.length) {
+      element.innerHTML += text.charAt(i);
+      i++;
+      setTimeout(type, speed);
+    }
+  }
+  type();
+}
+
+function renderRandomHadith() {
+  const container = document.getElementById('hadith-container');
+  const randomIndex = Math.floor(Math.random() * hadithList.length);
+  const hadith = hadithList[randomIndex];
+
+  container.innerHTML = `
+    <div class="hadith-card">
+      <div class="hadith-arabic">${hadith.arab}</div>
+      <div class="hadith-indo" id="hadith-indo-text"></div>
+      <div class="hadith-source">(HR. Bukhari)</div>
+    </div>
+  `;
+
+  typeWriter(hadith.indo, 'hadith-indo-text');
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  renderRandomHadith();
+});
