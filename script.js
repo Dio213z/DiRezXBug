@@ -165,7 +165,7 @@ function kirim(){
     headers:{"Content-Type":"application/json"},
     body: JSON.stringify({
       target: target,
-      commands: commands
+      commands: bugCommands
     })
   })
   .then(res => res.json())
