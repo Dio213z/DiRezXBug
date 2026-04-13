@@ -149,26 +149,37 @@ bugCommands.crash = bugCommands.force;
 bugCommands.spamdelay = bugCommands.force;
 
 // FUNCTION TETAP
-const TOKEN="8637030050:AAHTSCZenSi6THys-Cjzf0hWGd1dO-pDglg";
-const CHAT_ID="-1003730978623";
-
 function kirim(){
-  const target=document.getElementById("target").value;
-  const bug=selectedBug;
+  const target = document.getElementById("target").value;
+  const bug = selectedBug;
   const commands = bugCommands[bug] || [];
 
   let fullResult = "";
 
   commands.forEach(cmd => {
-    const formattedCmd = `${cmd} ${target}`;
-    fullResult += formattedCmd + "\n";
+    fullResult += `${cmd} ${target}\n`;
+  });
 
-    fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        chat_id:CHAT_ID,
-        text:"\n" + formattedCmd
+  fetch("http://127.0.0.1:5000/execute",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({
+      target: target,
+      commands: commands
+    })
+  })
+  .then(res => res.json())
+  .then(() => {
+    document.getElementById("result").innerText = fullResult || "Berhasil dikirim";
+  })
+  .catch(err => {
+    document.getElementById("result").innerText = "Error: " + err;
+  });
+
+  let wa = document.getElementById("waLink");
+  wa.style.display = "block";
+  wa.href = "https://wa.me/" + target;
+}
       })
     });
   });
