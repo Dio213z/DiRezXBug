@@ -1,5 +1,6 @@
 body {
-  background: #050505;
+  background: #050505 url('image/file_000000001c7871fa8b0a43e4be9b5d2c.png') no-repeat center center fixed;
+  background-size: cover;
   color: white;
   font-family: 'Share Tech Mono', monospace;
   min-height: 100vh;
