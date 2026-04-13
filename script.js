@@ -43,11 +43,17 @@ document.addEventListener("mousemove",(e)=>{
 function animateEyes(){
   document.querySelectorAll(".iris").forEach(iris=>{
     const rect=iris.parentElement.getBoundingClientRect();
-    const x=rect.left+rect.width/2;
-    const y=rect.top+rect.height/2;
+    const eyeCenterX=rect.left+rect.width/2;
+    const eyeCenterY=rect.top+rect.height/2;
 
-    const dx=(mouseX-x)/20;
-    const dy=(mouseY-y)/20;
+    const angle = Math.atan2(mouseY - eyeCenterY, mouseX - eyeCenterX);
+    const distance = Math.min(
+      Math.sqrt(Math.pow(mouseX - eyeCenterX, 2) + Math.pow(mouseY - eyeCenterY, 2)) / 10,
+      12 // Max radius
+    );
+
+    const dx = Math.cos(angle) * distance;
+    const dy = Math.sin(angle) * distance;
 
     iris.style.transform=`translate(${dx}px,${dy}px)`;
   });

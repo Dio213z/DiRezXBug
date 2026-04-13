@@ -219,6 +219,97 @@ body{
   left:7px;
 }
 
+/* HEADBAND */
+.headband {
+  position: absolute;
+  top: 15px;
+  left: -5px;
+  width: 210px;
+  height: 20px;
+  background: linear-gradient(90deg, #00d2ff, #004e92);
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+  z-index: 2;
+}
+
+.headband::after {
+  content: '';
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 30px;
+  height: 40px;
+  background: inherit;
+  clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+  transform: rotate(-20deg);
+}
+
+/* BODY */
+.body-container {
+  width: 160px;
+  margin: -10px auto 0;
+  position: relative;
+  z-index: -1;
+}
+
+.torso {
+  width: 100px;
+  height: 80px;
+  background: #050505;
+  margin: 0 auto;
+  border-radius: 20px 20px 40px 40px;
+  position: relative;
+  box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
+  border-top: 2px solid #111;
+}
+
+.belt {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  height: 10px;
+  background: #00d2ff;
+  box-shadow: 0 0 10px #00d2ff;
+}
+
+.scarf {
+  width: 120px;
+  height: 30px;
+  background: linear-gradient(45deg, #00d2ff, #004e92);
+  margin: 0 auto;
+  border-radius: 50% 50% 10px 10px;
+  position: relative;
+  top: 5px;
+  z-index: 1;
+  box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+  animation: scarf-flow 3s ease-in-out infinite;
+}
+
+@keyframes scarf-flow {
+  0%, 100% { transform: rotate(-2deg) skewX(-2deg); }
+  50% { transform: rotate(2deg) skewX(2deg); }
+}
+
+.arms {
+  position: absolute;
+  top: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.arm {
+  width: 30px;
+  height: 60px;
+  background: #050505;
+  border-radius: 15px;
+  border-bottom: 5px solid #00d2ff;
+  box-shadow: 0 5px 10px rgba(0, 210, 255, 0.2);
+}
+
+.arm.left { transform: rotate(20deg); }
+.arm.right { transform: rotate(-20deg); }
+
 /* TEXT IDLE */
 .idleText{
   text-align:center;
