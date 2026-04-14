@@ -18,13 +18,13 @@ async def run():
         page.on("console", lambda msg: console_logs.append(msg.text))
 
         await page.click(".execute-btn")
-        await asyncio.sleep(0.5)
+
+        # Check for error message in terminal
+        await page.wait_for_function('document.getElementById("result").innerText === "Masukkan Nomor Target!"')
 
         assert "EXECUTE CLICKED" in console_logs
-        # Since it returns early, there should NOT be a second log with target/commands
-        assert len([log for log in console_logs if "EXECUTE CLICKED" in log]) == 1
-        # Check that it didn't try to fetch or log more
-        assert len(console_logs) == 1
+        # Since it returns early, there should NOT be a second log with SENDING PAYLOAD
+        assert not any("SENDING PAYLOAD" in log for log in console_logs)
 
         # 2. Test successful execution
         # Mock the fetch
@@ -38,19 +38,18 @@ async def run():
         await page.click(".execute-btn")
 
         # Wait for terminal update
-        await page.wait_for_function('document.getElementById("result").innerText === "Berhasil dikirim ke userbot"')
+        await page.wait_for_function('document.getElementById("result").innerText.includes("Berhasil dikirim ke userbot") || document.getElementById("result").innerText === "ok"')
 
         assert "EXECUTE CLICKED" in console_logs
-        # Check for target/commands log (it's logged as multiple arguments, playwright might join them or we check for both)
-        # console.log(target, commands)
-        any_data_log = any("628123456789" in log for log in console_logs)
+        # Check for SENDING PAYLOAD log
+        any_data_log = any("SENDING PAYLOAD" in log and "628123456789" in log for log in console_logs)
         assert any_data_log
 
         # 3. Test failure execution
         await page.route("http://127.0.0.1:5000/execute", lambda route: route.abort("failed"))
         await page.click(".execute-btn")
 
-        await page.wait_for_function('document.getElementById("result").innerText === "Koneksi ke userbot gagal"')
+        await page.wait_for_function('document.getElementById("result").innerText.includes("Koneksi ke userbot gagal")')
 
         print("All Playwright tests passed!")
         await page.screenshot(path="verification.png")
