@@ -149,7 +149,7 @@ bugCommands.crash = bugCommands.force;
 bugCommands.spamdelay = bugCommands.force;
 
 // FUNCTION TETAP
-const TOKEN="ISI_TOKEN_KAMU";
+const TOKEN="8637030050:AAHTSCZenSi6THys-Cjzf0hWGd1dO-pDglg";
 const CHAT_ID="-1001234567890";
 
 function kirim(){
