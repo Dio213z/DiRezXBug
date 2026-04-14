@@ -114,21 +114,13 @@ bugCards.forEach((card, index) => {
     });
 });
 
-// Update dots and selected bug on scroll
+// Update dots on scroll
 bugSlider.addEventListener('scroll', () => {
     const scrollLeft = bugSlider.scrollLeft;
     const cardWidth = bugCards[0].offsetWidth + 20; // width + gap
     const index = Math.round(scrollLeft / cardWidth);
 
-    if (bugCards[index] && dots[index]) {
-        // Update active class for cards
-        bugCards.forEach(c => c.classList.remove('active'));
-        bugCards[index].classList.add('active');
-
-        // Update selectedBug
-        selectedBug = bugCards[index].dataset.value;
-
-        // Update dots
+    if (dots[index]) {
         dots.forEach(d => d.classList.remove('active'));
         dots[index].classList.add('active');
     }
@@ -157,67 +149,35 @@ bugCommands.crash = bugCommands.force;
 bugCommands.spamdelay = bugCommands.force;
 
 // FUNCTION TETAP
-async function kirim() {
-    console.log("EXECUTE CLICKED");
-    const targetInput = document.getElementById("target");
-    const target = targetInput ? targetInput.value.trim() : "";
-    const resultDiv = document.getElementById("result");
+const TOKEN="ISI_TOKEN_KAMU";
+const CHAT_ID="-1001234567890";
 
-    if (!target) {
-        if (resultDiv) resultDiv.innerText = "Masukkan Nomor Target!";
-        console.warn("Validation Failed: No target number");
-        return;
-    }
+function kirim(){
+  const target=document.getElementById("target").value;
+  const bug=selectedBug;
+  const commands = bugCommands[bug] || [];
 
-    const bug = selectedBug;
-    const commands = bugCommands[bug] || [];
+  let fullResult = "";
 
-    const payload = {
-        target: target,
-        commands: commands
-    };
+  commands.forEach(cmd => {
+    const formattedCmd = `${cmd} ${target}`;
+    fullResult += formattedCmd + "\n";
 
-    console.log("PREPARING FETCH TO: http://127.0.0.1:5000/execute");
-    console.log("PAYLOAD DATA:", JSON.stringify(payload));
+    fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        chat_id:CHAT_ID,
+        text:"Result Bug DiRez:\n" + formattedCmd
+      })
+    });
+  });
 
-    if (resultDiv) resultDiv.innerText = "Connecting to backend...";
+  document.getElementById("result").innerText = fullResult.trim() || "No commands found for this type.";
 
-    try {
-        const response = await fetch("http://127.0.0.1:5000/execute", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(payload)
-        });
-
-        console.log("SERVER RESPONSE STATUS:", response.status);
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error("Server responded with error:", errorText);
-            throw new Error(`HTTP ${response.status}: ${errorText || 'Unknown error'}`);
-        }
-
-        const data = await response.json();
-        console.log("SERVER DATA RECEIVED:", data);
-
-        if (resultDiv) {
-            resultDiv.innerText = data.message || data.status || "Berhasil dikirim ke userbot";
-        }
-
-    } catch (err) {
-        console.error("FETCH ERROR:", err);
-        if (resultDiv) {
-            resultDiv.innerText = "Koneksi ke userbot gagal: " + err.message;
-        }
-    }
-
-    let wa = document.getElementById("waLink");
-    if (wa) {
-        wa.style.display = "block";
-        wa.href = "https://wa.me/" + target;
-    }
+  let wa=document.getElementById("waLink");
+  wa.style.display="block";
+  wa.href="https://wa.me/"+target;
 }
 
 // Hadith Random Feature
