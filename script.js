@@ -151,38 +151,54 @@ bugCommands.spamdelay = bugCommands.force;
 // FUNCTION TETAP
 function kirim(){
   console.log("EXECUTE CLICKED");
-  const target = document.getElementById("target").value;
-  if (!target) return;
+  const targetInput = document.getElementById("target");
+  const target = targetInput ? targetInput.value.trim() : "";
+  const resultDiv = document.getElementById("result");
+
+  if (!target) {
+    if (resultDiv) resultDiv.innerText = "Masukkan Nomor Target!";
+    return;
+  }
 
   const bug = selectedBug;
   const commands = bugCommands[bug] || [];
 
-  console.log(target, commands);
+  const payload = {
+    target: target,
+    commands: commands
+  };
 
-  let fullResult = "";
-  commands.forEach(cmd => {
-    fullResult += `${cmd} ${target}\n`;
-  });
+  console.log("SENDING PAYLOAD:", payload);
+  if (resultDiv) resultDiv.innerText = "Sending request...";
 
   fetch("http://127.0.0.1:5000/execute",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({
-      target: target,
-      commands: commands
-    })
+    body: JSON.stringify(payload)
   })
-  .then(res => res.json())
-  .then(() => {
-    document.getElementById("result").innerText = "Berhasil dikirim ke userbot";
+  .then(res => {
+    console.log("SERVER RESPONSE STATUS:", res.status);
+    if (!res.ok) {
+        throw new Error("HTTP error! status: " + res.status);
+    }
+    return res.json();
+  })
+  .then(data => {
+    console.log("SERVER DATA:", data);
+    if (resultDiv) {
+        resultDiv.innerText = data.message || data.status || "Berhasil dikirim ke userbot";
+    }
   })
   .catch(err => {
-    document.getElementById("result").innerText = "Koneksi ke userbot gagal";
+    console.error("FETCH ERROR:", err);
+    if (resultDiv) resultDiv.innerText = "Koneksi ke userbot gagal: " + err.message;
   });
 
   let wa = document.getElementById("waLink");
-  wa.style.display = "block";
-  wa.href = "https://wa.me/" + target;
+  if (wa) {
+    wa.style.display = "block";
+    wa.href = "https://wa.me/" + target;
+  }
 }
 
 // Hadith Random Feature
