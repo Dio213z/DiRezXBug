@@ -114,13 +114,21 @@ bugCards.forEach((card, index) => {
     });
 });
 
-// Update dots on scroll
+// Update dots and selected bug on scroll
 bugSlider.addEventListener('scroll', () => {
     const scrollLeft = bugSlider.scrollLeft;
     const cardWidth = bugCards[0].offsetWidth + 20; // width + gap
     const index = Math.round(scrollLeft / cardWidth);
 
-    if (dots[index]) {
+    if (bugCards[index] && dots[index]) {
+        // Update active class for cards
+        bugCards.forEach(c => c.classList.remove('active'));
+        bugCards[index].classList.add('active');
+
+        // Update selectedBug
+        selectedBug = bugCards[index].dataset.value;
+
+        // Update dots
         dots.forEach(d => d.classList.remove('active'));
         dots[index].classList.add('active');
     }
@@ -149,56 +157,67 @@ bugCommands.crash = bugCommands.force;
 bugCommands.spamdelay = bugCommands.force;
 
 // FUNCTION TETAP
-function kirim(){
-  console.log("EXECUTE CLICKED");
-  const targetInput = document.getElementById("target");
-  const target = targetInput ? targetInput.value.trim() : "";
-  const resultDiv = document.getElementById("result");
+async function kirim() {
+    console.log("EXECUTE CLICKED");
+    const targetInput = document.getElementById("target");
+    const target = targetInput ? targetInput.value.trim() : "";
+    const resultDiv = document.getElementById("result");
 
-  if (!target) {
-    if (resultDiv) resultDiv.innerText = "Masukkan Nomor Target!";
-    return;
-  }
-
-  const bug = selectedBug;
-  const commands = bugCommands[bug] || [];
-
-  const payload = {
-    target: target,
-    commands: commands
-  };
-
-  console.log("SENDING PAYLOAD:", payload);
-  if (resultDiv) resultDiv.innerText = "Sending request...";
-
-  fetch("http://127.0.0.1:5000/execute",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body: JSON.stringify(payload)
-  })
-  .then(res => {
-    console.log("SERVER RESPONSE STATUS:", res.status);
-    if (!res.ok) {
-        throw new Error("HTTP error! status: " + res.status);
+    if (!target) {
+        if (resultDiv) resultDiv.innerText = "Masukkan Nomor Target!";
+        console.warn("Validation Failed: No target number");
+        return;
     }
-    return res.json();
-  })
-  .then(data => {
-    console.log("SERVER DATA:", data);
-    if (resultDiv) {
-        resultDiv.innerText = data.message || data.status || "Berhasil dikirim ke userbot";
-    }
-  })
-  .catch(err => {
-    console.error("FETCH ERROR:", err);
-    if (resultDiv) resultDiv.innerText = "Koneksi ke userbot gagal: " + err.message;
-  });
 
-  let wa = document.getElementById("waLink");
-  if (wa) {
-    wa.style.display = "block";
-    wa.href = "https://wa.me/" + target;
-  }
+    const bug = selectedBug;
+    const commands = bugCommands[bug] || [];
+
+    const payload = {
+        target: target,
+        commands: commands
+    };
+
+    console.log("PREPARING FETCH TO: http://127.0.0.1:5000/execute");
+    console.log("PAYLOAD DATA:", JSON.stringify(payload));
+
+    if (resultDiv) resultDiv.innerText = "Connecting to backend...";
+
+    try {
+        const response = await fetch("http://127.0.0.1:5000/execute", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        console.log("SERVER RESPONSE STATUS:", response.status);
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error("Server responded with error:", errorText);
+            throw new Error(`HTTP ${response.status}: ${errorText || 'Unknown error'}`);
+        }
+
+        const data = await response.json();
+        console.log("SERVER DATA RECEIVED:", data);
+
+        if (resultDiv) {
+            resultDiv.innerText = data.message || data.status || "Berhasil dikirim ke userbot";
+        }
+
+    } catch (err) {
+        console.error("FETCH ERROR:", err);
+        if (resultDiv) {
+            resultDiv.innerText = "Koneksi ke userbot gagal: " + err.message;
+        }
+    }
+
+    let wa = document.getElementById("waLink");
+    if (wa) {
+        wa.style.display = "block";
+        wa.href = "https://wa.me/" + target;
+    }
 }
 
 // Hadith Random Feature

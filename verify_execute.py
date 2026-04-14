@@ -23,8 +23,8 @@ async def run():
         await page.wait_for_function('document.getElementById("result").innerText === "Masukkan Nomor Target!"')
 
         assert "EXECUTE CLICKED" in console_logs
-        # Since it returns early, there should NOT be a second log with SENDING PAYLOAD
-        assert not any("SENDING PAYLOAD" in log for log in console_logs)
+        # Since it returns early, there should NOT be a second log with payload data
+        assert not any("PAYLOAD DATA" in log or "SENDING PAYLOAD" in log for log in console_logs)
 
         # 2. Test successful execution
         # Mock the fetch
@@ -41,8 +41,8 @@ async def run():
         await page.wait_for_function('document.getElementById("result").innerText.includes("Berhasil dikirim ke userbot") || document.getElementById("result").innerText === "ok"')
 
         assert "EXECUTE CLICKED" in console_logs
-        # Check for SENDING PAYLOAD log
-        any_data_log = any("SENDING PAYLOAD" in log and "628123456789" in log for log in console_logs)
+        # Check for payload data log
+        any_data_log = any(("PAYLOAD DATA" in log or "SENDING PAYLOAD" in log) and "628123456789" in log for log in console_logs)
         assert any_data_log
 
         # 3. Test failure execution
